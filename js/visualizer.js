@@ -9,7 +9,7 @@ export default () => {
             mediaElSrc: {},
             design: {
                 default: "square",
-                validator (value) {
+                validator(value) {
                     return value === "square" || value === "circle";
                 }
             },
@@ -24,11 +24,22 @@ export default () => {
             vertscale: {
                 type: Number,
                 default: 3
+            },
+            maxFPS: {
+                type: Number,
+                default: 30
             }
         },
-        data (){
+        data() {
             return {
-                divider: 16 // data "resolution" divider
+                divider: 16, // data "resolution" divider
+                draw: undefined,
+                frameLimit: window.performance.now()
+            }
+        },
+        computed: {
+            maxFPS_ms() {
+                return 1000 / this.maxFPS;
             }
         },
         mounted() {
@@ -62,11 +73,12 @@ export default () => {
                     this.resize();
 
                     if (this.design === "square") {
-                        this.reqFrame(this.draw);
+                        this.draw = this.drawSquare;
                     }
-                    else if (this.design === "circle") {
-                        this.reqFrame(this.drawCircle);
+                    else {
+                        this.draw = this.drawCircle;
                     }
+                    this.reqFrame();
                 });
             },
             /**
@@ -121,24 +133,34 @@ export default () => {
                 this.recalc();
             },
 
-            reqFrame(func) {
-                if(this.mediaElSrc.mediaElement.paused || this.canvas.offsetHeight === 0) {
+            /**
+             * Method to manage draw trigger
+             * Limits FPS to this.maxFPS
+             * Idle mode if audio element is paused, not visible or not ready yet
+             */
+            reqFrame() {
+                if (( this.mediaElSrc.mediaElement && this.mediaElSrc.mediaElement.paused)
+                    || this.canvas.offsetHeight === 0) {
                     //wait a while and try again
                     setTimeout(() => {
-                        this.reqFrame(func);
+                        requestAnimationFrame(this.reqFrame);
                     }, 200)
                 }
                 else {
-                    setTimeout(() => {
-                        requestAnimationFrame(func);
-                    }, 30);
+                    const now = window.performance.now();
+                    if ((now - this.frameLimit) > this.maxFPS_ms) {
+                        // Draw
+                        this.draw();
+                        this.frameLimit = now;
+                    }
+                    requestAnimationFrame(this.reqFrame);
                 }
             },
 
             /**
              * Draws vertical bars
              */
-            draw() {
+            drawSquare() {
                 // get data for bars
                 this.analyser.getByteFrequencyData(this.freqBytes);
                 // clear before redraw
@@ -156,8 +178,6 @@ export default () => {
                         this.freqBytes[i] / 255, this.vertscale) * this.canvas.height));
                     this.c.stroke();
                 }
-
-                this.reqFrame(this.draw);
             },
 
 
@@ -210,8 +230,6 @@ export default () => {
                 this.c.arc(this.center[0], this.center[1], this.minDim - 1, 0, 2 * Math.PI);
                 this.c.stroke();
                 this.c.strokeStyle = origStyle;
-
-                this.reqFrame(this.drawCircle);
             }
         }
     });

@@ -13,7 +13,7 @@ const app = new Vue({
         loglevel: process.env.NODE_ENV === 'production' ? "INFO" : "DEBUG",
         title: "Liquid Radio",
         repoLink: "https://github.com/Trikolon/liquidradio",
-        version: "1.0.1",
+        version: "1.1.0",
         stream: {
             play: false,
             offline: false,
@@ -133,7 +133,6 @@ const app = new Vue({
             for (let i = 0; i < this.stream.stations.length; i++) {
                 if (this.stream.stations[i].id === id) {
                     this.stream.currentStation = this.stream.stations[i];
-                    this.stream.currentStationSource = 0;
                     this.stream.play = false;
                     // Wait for vue to update src url in audio element before triggering play()
                     Vue.nextTick(() => {
@@ -190,7 +189,7 @@ const app = new Vue({
             if (this.stream.play) {
                 this.updatePlayState(true);
             }
-            else {
+            else { // Stream play state was false before, set it to true (watcher will handle the dom play)
                 this.stream.play = true;
             }
             this.stream.offline = false;
@@ -207,6 +206,7 @@ const app = new Vue({
             if (e.target.nodeName === "SOURCE") {
                 log.debug("Error originates from SOURCE tag");
 
+                log.debug("NetworkState", this.stream.dom.networkState);
                 //NETWORK_NO_SOURCE
                 if (this.stream.dom.networkState === 3) {
                     msg = "Stream offline"

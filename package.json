@@ -1,6 +1,6 @@
 {
   "name": "liquidradio",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "Frontend for music station Liquid Radio https://liquidradio.pro",
   "main": "public/index.js",
   "directories": {
