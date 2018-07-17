@@ -8,7 +8,7 @@
   },
   "dependencies": {
     "loglevel": "^1.6.1",
-    "offline-plugin": "^4.9.0",
+    "offline-plugin": "^5.0.5",
     "raven-js": "^3.22.1",
     "vue": "^2.5.13",
     "vue-material": "^0.8.1",
