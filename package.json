@@ -10,7 +10,7 @@
     "loglevel": "^1.6.1",
     "offline-plugin": "^4.9.0",
     "raven-js": "^3.22.1",
-    "vue": "^2.5.13",
+    "vue": "^2.5.17",
     "vue-material": "^0.8.1",
     "vue-router": "^3.0.1"
   },
