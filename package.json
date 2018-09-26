@@ -29,7 +29,7 @@
     "html-webpack-plugin": "^2.30.1",
     "style-loader": "^0.20.1",
     "vue-loader": "^13.7.0",
-    "vue-template-compiler": "^2.5.13",
+    "vue-template-compiler": "^2.5.17",
     "webpack": "^3.10.0",
     "webpack-dev-server": "^2.11.1"
   },
