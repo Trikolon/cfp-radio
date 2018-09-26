@@ -9,7 +9,7 @@
   "dependencies": {
     "loglevel": "^1.6.1",
     "offline-plugin": "^4.9.0",
-    "raven-js": "^3.22.1",
+    "raven-js": "^3.27.0",
     "vue": "^2.5.13",
     "vue-material": "^0.8.1",
     "vue-router": "^3.0.1"
